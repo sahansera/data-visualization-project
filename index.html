@@ -23,17 +23,26 @@
           <p>My presentation discussed here...</p>		
         </section>
    
-        <section id="show-a-link">
-          <h1>Chart 1</h1>
-          <p>Slide 2 discussed here</p>
+        <section>
+          <h3>Number of people using social media platforms, 2004 to 2018</h3>
+          <!-- <p>Estimates correspond to monthly active users (MAUs). Facebook, for example, measures MAUs as users that have logged in
+          during the past 30 days. See source for
+          more details.</p> -->
           <div id="chart1"></div>
         </section>
    
         <section>
-          <h1>Slide 3</h1>
+          <h3>Percent of men and women using social media platforms in the US, 2019</h3>
           <p>To revisit another slide within the code:</p>
-          <p>Link to internal slide<a href="#/show-a-link"> 2</a>
           <div id="chart2"></div>
+        </section>
+
+        <section>
+          <h3>Daily hours spent with digital media, United States, 2008 to 2018</h3>
+          <!-- <p>Estimates correspond to monthly active users (MAUs). Facebook, for example, measures MAUs as users that have logged in
+                  during the past 30 days. See source for
+                  more details.</p> -->
+          <div id="chart3"></div>
         </section>
    
         </div>
@@ -54,11 +63,8 @@
         backgroundTransition: 'slide'
       });
 
-      console.log(Reveal);
-
       Reveal.addEventListener('slidechanged', event => {
         // event.previousSlide, event.currentSlide, event.indexh, event.indexv
-        console.log(event.indexh);
         d3.selectAll("svg").remove();
 
         var currentIndex = event.indexh;
@@ -67,9 +73,10 @@
         func();
         Reveal.layout();
       });
-      
+
     </script>
     <script src="scripts/chart1.js"></script>
     <script src="scripts/chart2.js"></script>
+    <script src="scripts/chart3.js"></script>
   </body>
 </html>
