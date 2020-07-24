@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/black.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/white.min.css">
     <link rel="stylesheet" href="styles/site.css">
 
     <title>Narrative Visualization Project</title>
@@ -26,14 +26,16 @@
         </section>
    
         <section id="show-a-link">
-          <h1>Show a live link</h1>
+          <h1>Chart 1</h1>
           <p>Slide 2 discussed here</p>
+          <div id="chart1"></div>
         </section>
    
         <section>
           <h1>Slide 3</h1>
           <p>To revisit another slide within the code:</p>
           <p>Link to internal slide<a href="#/show-a-link"> 2</a>
+          <div id="chart2"></div>
         </section>
    
         </div>
@@ -47,11 +49,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.min.js"></script>
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
     <script type="text/javascript">
+      var charts = {};
       Reveal.initialize({
         hash: true,
         backgroundTransition: 'slide'
       });
+
+      console.log(Reveal);
+
+      Reveal.addEventListener('slidechanged', event => {
+        // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+        console.log(event.indexh);
+        var currentIndex = event.indexh;
+        var func = charts['chart' + currentIndex];
+        func();
+        
+      });
     </script>
+    <script src="scripts/chart1.js"></script>
+    <script src="scripts/chart2.js"></script>
   </body>
 </html>
