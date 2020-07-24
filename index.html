@@ -4,77 +4,60 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/white.min.css">
     <link rel="stylesheet" href="styles/site.css">
 
-    <title>Narrative Visualization Project</title>
+    <title>CS 498 - Narrative Visualization Project</title>
   </head>
   <body>
-    <div class="reveal">
-      <!-- Wrap all slides in a single "slides" class -->
+    <div>
       <div class="slides">
-   
-        <!-- ALL SLIDES GO HERE -->
-        <!-- Each section element contains an individual slide -->
-        <section>
-          <h1>About My Presentation</h1>
-          <p>My presentation discussed here...</p>		
+        <section id="slide-1">
+          <h1>Impact of Social Media</h1>
+          <h3>A narrative visualization of how social media has impacted the way people spend their time</h3>
+          <p>Created by Sahan Serasinghe</p>		
+        </section>
+
+        <section id="slide-2">
+          <h1>Data Source</h1>
+          <p>Created by Sahan Serasinghe</p>		
+        </section>
+
+        <section id="slide-3">
+          <h1>About the Visualization</h1>
+          <p>Created by Sahan Serasinghe</p>		
         </section>
    
-        <section>
+        <section id="slide-4">
           <h3>Number of people using social media platforms, 2004 to 2018</h3>
-          <!-- <p>Estimates correspond to monthly active users (MAUs). Facebook, for example, measures MAUs as users that have logged in
-          during the past 30 days. See source for
-          more details.</p> -->
           <div id="chart1"></div>
         </section>
    
-        <section>
+        <section id="slide-5">
           <h3>Percent of men and women using social media platforms in the US, 2019</h3>
           <p>To revisit another slide within the code:</p>
           <div id="chart2"></div>
         </section>
 
-        <section>
+        <section id="slide-6">
           <h3>Daily hours spent with digital media, United States, 2008 to 2018</h3>
-          <!-- <p>Estimates correspond to monthly active users (MAUs). Facebook, for example, measures MAUs as users that have logged in
-                  during the past 30 days. See source for
-                  more details.</p> -->
           <div id="chart3"></div>
         </section>
-   
-        </div>
-    </div>
+      </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.min.js"></script>
+      <ul class="navigation">
+        <li id="dot-1" />
+        <li id="dot-2" />
+        <li id="dot-3" />
+        <li id="dot-4" />
+        <li id="dot-5" />
+      </ul>
+    </div>
 
     <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-    <script type="text/javascript">
-      var charts = {};
-      Reveal.initialize({
-        hash: true,
-        backgroundTransition: 'slide'
-      });
-
-      Reveal.addEventListener('slidechanged', event => {
-        // event.previousSlide, event.currentSlide, event.indexh, event.indexv
-        d3.selectAll("svg").remove();
-
-        var currentIndex = event.indexh;
-        var func = charts['chart' + currentIndex];
-        if (func == undefined) return;
-        func();
-        Reveal.layout();
-      });
-
-    </script>
+    <script src="scripts/main.js"></script>
     <script src="scripts/chart1.js"></script>
     <script src="scripts/chart2.js"></script>
     <script src="scripts/chart3.js"></script>
