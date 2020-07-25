@@ -5,7 +5,7 @@ charts.chart3 = function () {
   var margin = {
       top: 10,
       right: 200,
-      bottom: 20,
+      bottom: 40,
       left: 50,
     },
     width =
@@ -70,6 +70,15 @@ charts.chart3 = function () {
             .tickSizeOuter(0)
         );
 
+
+      // text label for the x axis
+      svg.append("text")             
+      .attr("transform",
+          "translate(" + (width/2) + " ," + 
+                        (height + margin.top + 30) + ")")
+      .style("text-anchor", "middle")
+      .text("Year");
+
       // Add Y axis
       var y = d3
         .scaleLinear()
@@ -78,6 +87,15 @@ charts.chart3 = function () {
       svg.append("g").call(
         d3.axisLeft(y)
       );
+
+      // text label for the y axis
+      svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Hours Spent Daily");
 
       // color palette = one color per subgroup
       var color = d3

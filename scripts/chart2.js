@@ -22,16 +22,33 @@ charts.chart2 = function () {
 
     // Initialize the X axis
     xScale = d3.scaleBand()
-    .range([ 0, width ])
-    .padding(0.2);
+      .range([ 0, width ])
+      .padding(0.2);
     xAxis = svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + height + ")")
+
+    // text label for the x axis
+    svg.append("text")             
+      .attr("transform",
+          "translate(" + (width/2) + " ," + 
+                        (height + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Social Media Platform");
 
     // Initialize the Y axis
     yScale = d3.scaleLinear()
-    .range([ height, 0]);
+      .range([ height, 0]);
     yAxis = svg.append("g")
-    .attr("class", "myYaxis")
+      .attr("class", "myYaxis");
+
+    // text label for the y axis
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Percentage");
 
     // event handlers for buttons
     d3.select('button.chart2.men').on("click", function() {
@@ -49,31 +66,34 @@ charts.chart2 = function () {
     // Parse the Data
     d3.csv("../data/percent-of-men-and-women-using-social-media-platforms-in-the-us.csv", function(data) {
 
-    // X axis
-    xScale.domain(data.map(function(d) { return d.Entity; }))
-    xAxis.transition().duration(1000).call(d3.axisBottom(xScale))
+      // X axis
+      xScale.domain(data.map(function(d) { return d.Entity; }))
+      xAxis.transition().duration(1000).call(d3.axisBottom(xScale))
 
-    // Add Y axis
-    yScale.domain([0, d3.max(data, function(d) { return +d[selectedVar] }) ]);
-    yAxis.transition().duration(1000).call(d3.axisLeft(yScale));
+      // Add Y axis
+      yScale.domain([0, d3.max(data, function(d) { return +d[selectedVar] }) ]);
+      yAxis.transition().duration(1000).call(d3.axisLeft(yScale));
 
-    // variable u: map data to existing bars
-    var u = svg.selectAll("rect")
-      .data(data)
+      // variable u: map data to existing bars
+      var u = svg.selectAll("rect")
+        .data(data)
 
-    // update bars
-    u
-      .enter()
-      .append("rect")
-      .merge(u)
-      .transition()
-      .duration(1000)
-        .attr("x", function(d) { return xScale(d.Entity); })
-        .attr("y", function(d) { return yScale(d[selectedVar]); })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(d) { return height - yScale(d[selectedVar]); })
-        .attr("fill", "#69b3a2")
-    })
+      // update bars
+      u
+        .enter()
+        .append("rect")
+        .merge(u)
+        .transition()
+        .duration(1000)
+          .attr("x", function(d) { return xScale(d.Entity); })
+          .attr("y", function(d) { return yScale(d[selectedVar]); })
+          .attr("width", xScale.bandwidth())
+          .attr("height", function(d) { return height - yScale(d[selectedVar]); })
+          .attr("fill", "#69b3a2")
+
+       d3.select("h4.chart2.title")
+        .text("Social Media Usage of " + selectedVar); 
+    });
   }
 
   initialize();
