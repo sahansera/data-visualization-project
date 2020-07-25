@@ -1,6 +1,6 @@
 var charts = {};
 var totalSlides = 7;
-var slide = 4;
+var slide = 3;
 
 // Helper Functions
 function prev() {
@@ -9,12 +9,6 @@ function prev() {
 
 function next() {
   if (slide < totalSlides) {slide++;nextSlide();}
-}
-
-function updateChart2(selection) {
-  var chart2Func = charts.chart2(selection);
-  console.log(chart2Func);
-  chart2Func.update(selection);
 }
 
 function nextSlide() {

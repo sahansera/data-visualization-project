@@ -28,7 +28,7 @@ charts.chart1 = function () {
       values: data
         .filter(function(d){ return d.Entity === grpName})
         .map(function(d) {
-          return {time: d.Year, value: d.MonthlyUsers};
+          return {time: d.Year, value: d.MonthlyUsers, group: d.Entity};
         })
     };
   });
@@ -84,7 +84,42 @@ charts.chart1 = function () {
       .attr("class", function(d){ return d.name })
       .attr("stroke", function(d){ return myColor(d.name) })
       .style("stroke-width", 4)
-      .style("fill", "none")
+      .style("fill", "none");
+
+
+    // ----------------
+    // Create a tooltip
+    // ----------------
+    var tooltip = d3
+      .select("#chart1")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip");
+      
+    // Three function that change the tooltip when user hover / move / leave a cell
+    var mouseover = function (d) {
+      tooltip
+        .html(
+            "<strong>Platform: </strong>" + d.group +
+            "<br>" +
+            "<strong>Users: </strong>" + d.value +
+            "<br>" +
+            "<strong>Year: </strong>" + d.time
+        )
+        .style("opacity", 1);
+    };
+    var mousemove = function (d) {
+      tooltip
+        .style(
+          "left", d3.event.pageX + "px"
+        )
+        .style(
+          "top", (d3.event.pageY - 110)  + "px"
+        );
+    };
+    var mouseleave = function (d) {
+      tooltip.style("opacity", 0);
+    };
 
   // Add the points
   svg
@@ -103,7 +138,10 @@ charts.chart1 = function () {
       .attr("cx", function(d) { return x(d.time) } )
       .attr("cy", function(d) { return y(d.value) } )
       .attr("r", 5)
-      .attr("stroke", "white");
+      .attr("stroke", "white")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave);
 
   // Add a legend at the end of each line
   svg
