@@ -1,4 +1,4 @@
-Entity,Code,Year,Monthly active users (Statista and TNW (2019)) (MAU)
+Entity,Code,Year,MonthlyUsers
 Facebook,,2008,100000000
 Facebook,,2009,276000000
 Facebook,,2010,517750000
@@ -10,7 +10,6 @@ Facebook,,2015,1516750000
 Facebook,,2016,1753500000
 Facebook,,2017,2035750000
 Facebook,,2018,2255250000
-Facebook,,2019,2375000000
 Flickr,,2004,3675135
 Flickr,,2005,7399354
 Flickr,,2006,14949270
@@ -75,7 +74,6 @@ Orkut,,2012,45067022
 Pinterest,,2016,143250000
 Pinterest,,2017,195000000
 Pinterest,,2018,246500000
-Pinterest,,2019,291000000
 Reddit,,2006,248309
 Reddit,,2007,488331
 Reddit,,2008,1944940
@@ -104,7 +102,6 @@ Twitter,,2015,304500000
 Twitter,,2016,314500000
 Twitter,,2017,328250000
 Twitter,,2018,329500000
-Twitter,,2019,330000000
 WeChat,,2011,47818400
 WeChat,,2012,118123370
 WeChat,,2013,196523760
