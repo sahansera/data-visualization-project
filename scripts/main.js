@@ -1,7 +1,8 @@
 var charts = {};
-var totalSlides = 6;
-var slide = 3;
+var totalSlides = 7;
+var slide = 4;
 
+// Helper Functions
 function prev() {
   if (slide > 1) {slide--;nextSlide()};
 }
@@ -10,21 +11,11 @@ function next() {
   if (slide < totalSlides) {slide++;nextSlide();}
 }
 
-d3.select(window).on("keydown", function() {
-  // var keys = Object.keys(charts).length;
-  switch (d3.event.keyCode) {
-    case 37: prev(); break;
-    case 39: next(); break;
-  }
-});
-
-d3.select("#prev").on("click", function() {
-  prev();
-});
-
-d3.select("#next").on("click", function() {
-  next();
-});
+function updateChart2(selection) {
+  var chart2Func = charts.chart2(selection);
+  console.log(chart2Func);
+  chart2Func.update(selection);
+}
 
 function nextSlide() {
   // Clear all slides except selected one
@@ -51,4 +42,21 @@ function nextSlide() {
     .attr("class", "active-dot");
 }
 
+// D3 Event Listeners
+d3.select(window).on("keydown", function() {
+  switch (d3.event.keyCode) {
+    case 37: prev(); break;
+    case 39: next(); break;
+  }
+});
+
+d3.select("#prev").on("click", function() {
+  prev();
+});
+
+d3.select("#next").on("click", function() {
+  next();
+});
+
+// Initialization
 nextSlide();

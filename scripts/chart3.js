@@ -114,8 +114,8 @@ charts.chart3 = function () {
           .html(
               "<strong>"+subgroupName+"</strong>" +
               "<br>" +
-              "Daily Hours: " +
-              subgroupValue
+              subgroupValue +
+              " hours per adult user "
           )
           .style("opacity", 1);
       };
