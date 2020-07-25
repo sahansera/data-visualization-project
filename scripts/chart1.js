@@ -81,6 +81,7 @@ charts.chart1 = function () {
     .enter()
     .append("path")
       .attr("d", function(d){ return line(d.values) } )
+      .attr("class", function(d){ return d.name })
       .attr("stroke", function(d){ return myColor(d.name) })
       .style("stroke-width", 4)
       .style("fill", "none")
@@ -93,6 +94,7 @@ charts.chart1 = function () {
     .enter()
       .append('g')
       .style("fill", function(d){ return myColor(d.name) })
+      .attr("class", function(d){ return d.name })
     // Second we need to enter in the 'values' part of this group
     .selectAll("myPoints")
     .data(function(d){ return d.values })
@@ -101,7 +103,7 @@ charts.chart1 = function () {
       .attr("cx", function(d) { return x(d.time) } )
       .attr("cy", function(d) { return y(d.value) } )
       .attr("r", 5)
-      .attr("stroke", "white")
+      .attr("stroke", "white");
 
   // Add a legend at the end of each line
   svg
@@ -116,6 +118,25 @@ charts.chart1 = function () {
         .text(function(d) { return d.name; })
         .style("fill", function(d){ return myColor(d.name) })
         .style("font-size", 15)
+        .attr("class", function(d){ return d.name });
 
-  });
+  // Add a legend (interactive)
+  // svg
+  // .selectAll("myLegend")
+  // .data(dataReady)
+  // .enter()
+  //   .append('g')
+  //   .append("text")
+  //     .attr('x', function(d,i){ return 30 + i*80})
+  //     .attr('y', 30)
+  //     .text(function(d) { return d.name; })
+  //     .style("fill", function(d){ return myColor(d.name) })
+  //     .style("font-size", 15)
+  //   .on("click", function(d){
+  //     // is the element currently visible ?
+  //     currentOpacity = d3.selectAll("." + d.name).style("opacity")
+  //     // Change the opacity: from 0 to 1 or from 1 to 0
+  //     d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)})
+
+});
 };

@@ -10,7 +10,7 @@ body {
 }
 
 section {
-  height: 1000px;
+  height: 960px;
 }
 
 svg {
@@ -20,6 +20,16 @@ svg {
   margin-left: auto;
   margin-right: auto;
   /* width: 40%; */
+}
+
+.tooltip {
+  position: absolute;
+  background-color: white;
+  border: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 10px;
+  z-index: 999;
 }
 
 .btn {
