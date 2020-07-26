@@ -1,6 +1,6 @@
 var charts = {};
 var totalSlides = 7;
-var slide = 3;
+var slide = 5;
 
 // Helper Functions
 function prev() {
