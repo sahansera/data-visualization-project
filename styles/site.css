@@ -1,16 +1,17 @@
- /* Custom CSS
- * --------------------------------------- */
+/* --------------------------------------- */ 
+/* Custom CSS
+* --------------------------------------- */
 
 body {
   font-family: Open Sans;
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 0px 5px 0px 5px;
+  padding: 0px 100px 0px 100px;
 }
 
 section {
-  height: 960px;
+  /* height: 900px; */
 }
 
 svg {
@@ -30,6 +31,12 @@ svg {
   border-radius: 3px;
   padding: 10px;
   z-index: 999;
+}
+
+.btn-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .btn {
@@ -70,4 +77,19 @@ svg {
 
 .active-dot {
   background-color: rgba(0, 0, 0, .3) !important;
+}
+
+text.annotation {
+  font-size: 15px;
+  font-style: italic;
+  stroke: #ff5f45;
+  fill: #ff5f45;
+}
+
+rect.annotation {
+  stroke: #ff5f45;
+  fill: transparent;
+}
+line.annotation {
+  stroke: #ff5f45;
 }
