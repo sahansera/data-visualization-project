@@ -3,13 +3,13 @@
 charts.chart3 = function () {
   // set the dimensions and margins of the graph
   var margin = {
-      top: 10,
+      top: 20,
       right: 30,
       bottom: 90,
       left: 50,
     },
     width = 960 - margin.left - margin.right,
-    height = 450 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   var svg = d3
@@ -25,6 +25,7 @@ charts.chart3 = function () {
     '../data/daily-hours-spent-with-digital-media-per-adult-user.csv',
     function (data) {
       drawChart(data);
+      drawAnnotation();
     }
   );
 
@@ -190,5 +191,30 @@ charts.chart3 = function () {
       .text(function (d, i) {
         return orderedSubgroups[i];
       });
+  }
+
+  function drawAnnotation() {
+    var annotation = svg.append('g');
+    annotation
+      .append('text')
+      .attr('x', 150)
+      .attr('y', 20)
+      .attr('class', 'annotation')
+      .html('Mobile usage has surpassed Desktop usage over the last decade');
+    annotation
+      .append('line')
+      .attr('x1', 610)
+      .attr('x2', 800)
+      .attr('y1', 20)
+      .attr('y2', 40)
+      .attr('class', 'annotation')
+      
+    annotation
+      .append('line')
+      .attr('x1', 310)
+      .attr('x2', 70)
+      .attr('y1', 30)
+      .attr('y2', 300)
+      .attr('class', 'annotation');
   }
 };
