@@ -69,7 +69,7 @@ charts.chart3 = function () {
       var color = d3
         .scaleOrdinal()
         .domain(subgroups)
-        .range(['#ffd53e', '#349840', '#3360a9']);
+        .range(d3.schemeTableau10);
 
       //stack the data? --> stack per subgroup
       var stackedData = d3.stack().keys(subgroups)(data);

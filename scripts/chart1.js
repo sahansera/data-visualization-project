@@ -1,13 +1,11 @@
 // https://www.d3-graph-gallery.com/connectedscatter.html
+// https://github.com/d3/d3-scale-chromatic
 
 charts.chart1 = function () {
   // set the dimensions and margins of the graph
   var margin = { top: 10, right: 100, bottom: 30, left: 100 },
     width = 960 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
-
-  // Year parse function
-  var parseDate = d3.timeParse("%Y");
 
   // append the svg object to the body of the page
   var svg = d3
@@ -75,7 +73,7 @@ charts.chart1 = function () {
     // console.log(dataReady)
 
     // A color scale: one color for each group
-    var myColor = d3.scaleOrdinal().domain(allGroup).range(d3.schemeSet2);
+    var myColor = d3.scaleOrdinal().domain(allGroup).range(d3.schemeTableau10);
 
     // Add X axis
     var x = d3

@@ -1,50 +1,26 @@
+// https://www.d3-graph-gallery.com/graph/barplot_button_data_hard.html
+
 charts.chart2 = function () {
   // set the dimensions and margins of the graph
   var margin = { top: 30, right: 30, bottom: 70, left: 60 },
     width = 960 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
+  // globals which we need later in other functions
   var xScale, yScale;
   var xAxis, yAxis;
-  var svg;
-
-  var mouseover, mousemove, mouseleave;
-
   var selection;
 
+  // append the svg object to the body of the page
+  svg = d3
+    .select('#chart2')
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
   function initialize() {
-    // ----------------
-    // Create a tooltip
-    // ----------------
-    var tooltip = d3
-      .select('#chart2')
-      .append('div')
-      .style('opacity', 0)
-      .attr('class', 'tooltip');
-
-    // Three function that change the tooltip when user hover / move / leave a cell
-    mouseover = function (d) {
-      tooltip
-        .html('<strong>' + d.Entity + '</strong>' + '<br>' + d[selection] + '%')
-        .style('opacity', 1);
-    };
-    mousemove = function (d) {
-      tooltip
-        .style('left', d3.event.pageX + 'px')
-        .style('top', d3.event.pageY - 80 + 'px');
-    };
-    mouseleave = function (d) {
-      tooltip.style('opacity', 0);
-    };
-
-    // append the svg object to the body of the page
-    svg = d3
-      .select('#chart2')
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     // Initialize the X axis
     xScale = d3.scaleBand().range([0, width]).padding(0.2);
@@ -86,17 +62,25 @@ charts.chart2 = function () {
 
   // A function that create / update the plot for a given variable:
   function update(selectedVar) {
+
+    // update selection because it's used by tooltip function
     selection = selectedVar;
 
     // Parse the Data
     d3.csv(
       '../data/percent-of-men-and-women-using-social-media-platforms-in-the-us.csv',
       function (data) {
+
+        var allEntities = data.map(function (d) {
+          return d.Entity;
+        });
+
+        // A color scale: one color for each group
+        var myColor = d3.scaleOrdinal().domain(allEntities).range(d3.schemeTableau10);
+
         // X axis
         xScale.domain(
-          data.map(function (d) {
-            return d.Entity;
-          })
+          allEntities
         );
         xAxis.transition().duration(1000).call(d3.axisBottom(xScale));
 
@@ -111,6 +95,12 @@ charts.chart2 = function () {
 
         // variable u: map data to existing bars
         var u = svg.selectAll('rect').data(data);
+
+        // draw tooltips
+        var mouseEventHandlers = drawTooltips();
+        var mouseover = mouseEventHandlers.mouseover,
+          mouseleave = mouseEventHandlers.mouseleave,
+          mousemove = mouseEventHandlers.mousemove;
 
         // update bars
         u.enter()
@@ -131,13 +121,44 @@ charts.chart2 = function () {
           .attr('height', function (d) {
             return height - yScale(d[selectedVar]);
           })
-          .attr('fill', '#69b3a2');
+          .attr('fill', function (d, i) {
+            return myColor(d.Entity);
+          });
 
         d3.select('h4.chart2.title').text(
           'Social Media Usage of ' + selectedVar
         );
       }
     );
+  }
+
+  function drawTooltips() {
+    var tooltip = d3
+      .select('#chart2')
+      .append('div')
+      .style('opacity', 0)
+      .attr('class', 'tooltip');
+
+    // Three function that change the tooltip when user hover / move / leave a cell
+    mouseover = function (d) {
+      tooltip
+        .html('<strong>' + d.Entity + '</strong>' + '<br>' + d[selection] + '%')
+        .style('opacity', 1);
+    };
+    mousemove = function (d) {
+      tooltip
+        .style('left', d3.event.pageX + 'px')
+        .style('top', d3.event.pageY - 80 + 'px');
+    };
+    mouseleave = function (d) {
+      tooltip.style('opacity', 0);
+    };
+
+    return {
+      mouseover: mouseover,
+      mouseleave: mouseleave,
+      mousemove: mousemove,
+    };
   }
 
   initialize();
