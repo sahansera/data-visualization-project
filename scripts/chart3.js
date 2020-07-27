@@ -93,6 +93,7 @@ charts.chart3 = function () {
       .attr('fill', function (d) {
         return color(d.key);
       })
+      .attr("class", function(d){ return "myRect " + d.key })
       .selectAll('rect')
       // enter a second time = loop subgroup per subgroup to add all rectangles
       .data(function (d) {
@@ -170,12 +171,32 @@ charts.chart3 = function () {
       .attr('fill', color)
       .attr('width', 20)
       .attr('height', 20)
+      .attr('class', function (d) { return "legend " + d; })
       .attr('y', function (d, i) {
         return height + 60;
       })
       // .attr('x', width - (margin.right - 250));
       .attr('x', function (d, i) {
         return (i * 120) + (width / 2) - (margin.right + 80);
+      })
+      .on("mouseover", function (d) {
+        var subgroupName = d;
+        
+        d3.selectAll(".myRect").style("opacity", 0.2);
+        
+        d3.selectAll(".myRect."+subgroupName)
+          .style("opacity", 1);
+
+        d3.select(".legend."+subgroupName)
+          .style("stroke", "black")
+          .style("stroke-width", "2");
+
+      })
+      .on('mouseleave', function (d) {
+        d3.selectAll(".myRect").style("opacity", 1);
+        d3.select(".legend."+d)
+          .style("stroke", "none")
+          .style("stroke-width", "0");
       });
 
     legend
