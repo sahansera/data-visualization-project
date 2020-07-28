@@ -20,6 +20,9 @@ function next() {
 function nextSlide() {
   // Clear all slides except selected one
   d3.selectAll('section').style('display', 'none');
+  
+  // Clear all tooltips
+  d3.selectAll('.tooltip').style('display', 'none');
 
   d3.selectAll('svg').remove();
 

@@ -2,6 +2,26 @@
 // https://github.com/d3/d3-scale-chromatic
 
 charts.chart1 = function () {
+  var dataSet;
+  var xScale, yScale;
+  var dots;
+
+  var MAX_YEAR = 2018,
+    MIN_YEAR = 2004;
+
+  // List of groups
+  var allGroups = [
+    'Facebook',
+    'YouTube',
+    'Whatsapp',
+    'Instagram',
+    'Tumblr',
+    'TikTok',
+    'Reddit',
+    'Twitter',
+    'MySpace',
+  ];
+
   // set the dimensions and margins of the graph
   var margin = { top: 10, right: 100, bottom: 30, left: 100 },
     width = 960 - margin.left - margin.right,
@@ -18,9 +38,16 @@ charts.chart1 = function () {
 
   //Read the data
   d3.csv('../data/users-by-social-media-platform.csv', function (data) {
+    dataSet = data;
     drawChart(data);
 
     drawAnnotation();
+
+    // listen to the slider
+    d3.select('#mySlider').on('change', function (d) {
+      selectedValue = this.value;
+      updateChart(selectedValue);
+    });
 
     // Add a legend (interactive)
     // svg
@@ -42,48 +69,27 @@ charts.chart1 = function () {
   });
 
   function drawChart(data) {
-    // List of groups
-    var allGroup = [
-      'Facebook',
-      'YouTube',
-      'Whatsapp',
-      'Instagram',
-      'Tumblr',
-      'TikTok',
-      'Reddit',
-      'Twitter',
-      'MySpace',
-    ];
-
     // Reformat the data: we need an array of arrays of {x, y} tuples
-    var dataReady = allGroup.map(function (grpName) {
-      // .map allows to do something for each element of the list
-      return {
-        name: grpName,
-        values: data
-          .filter(function (d) {
-            return d.Entity === grpName;
-          })
-          .map(function (d) {
-            return { time: new Date(d.Year), value: d.MonthlyUsers, group: d.Entity };
-          }),
-      };
-    });
+    var dataReady = reformatData(allGroups, data);
 
     // console.log(dataReady)
 
     // A color scale: one color for each group
-    var myColor = d3.scaleOrdinal().domain(allGroup).range(d3.schemeTableau10);
+    var myColor = d3.scaleOrdinal().domain(allGroups).range(d3.schemeTableau10);
 
     // Add X axis
-    var x = d3
+    xScale = d3
       .scaleTime()
-      .domain(d3.extent(data, function (d) { return new Date(parseInt(d.Year),0); }))
+      .domain(
+        d3.extent(data, function (d) {
+          return new Date(parseInt(d.Year), 0);
+        })
+      )
       .range([0, width]);
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)));
+
+    xAxis = svg.append('g').attr('transform', 'translate(0,' + height + ')');
+
+    xAxis.call(d3.axisBottom(xScale).ticks(d3.timeYear.every(1)));
 
     // text label for the x axis
     svg
@@ -96,8 +102,20 @@ charts.chart1 = function () {
       .text('Year');
 
     // Add Y axis
-    var y = d3.scaleLinear().domain([240000, 2375000000]).range([height, 0]);
-    svg.append('g').call(d3.axisLeft(y));
+    yScale = d3
+      .scaleLinear()
+      .domain([
+        d3.min(data, function (d) {
+          return +d['MonthlyUsers'];
+        }),
+        d3.max(data, function (d) {
+          return +d['MonthlyUsers'];
+        }),
+      ])
+      .range([height, 0]);
+
+    yAxis = svg.append('g');
+    yAxis.call(d3.axisLeft(yScale));
 
     // text label for the y axis
     svg
@@ -110,15 +128,16 @@ charts.chart1 = function () {
       .text('Monthly Active Users');
 
     // Add the lines
-    var line = d3
+    line = d3
       .line()
       .x(function (d) {
-        return x(+d.time);
+        return xScale(+d.time);
       })
       .y(function (d) {
-        return y(+d.value);
+        return yScale(+d.value);
       });
-    svg
+
+    lines = svg
       .selectAll('myLines')
       .data(dataReady)
       .enter()
@@ -141,7 +160,7 @@ charts.chart1 = function () {
       mousemove = mouseEventHandlers.mousemove;
 
     // Add the points
-    svg
+    dots = svg
       // First we need to enter in a group
       .selectAll('myDots')
       .data(dataReady)
@@ -152,8 +171,10 @@ charts.chart1 = function () {
       })
       .attr('class', function (d) {
         return d.name;
-      })
-      // Second we need to enter in the 'values' part of this group
+      });
+
+    // Second we need to enter in the 'values' part of this group
+    points = dots
       .selectAll('myPoints')
       .data(function (d) {
         return d.values;
@@ -161,13 +182,16 @@ charts.chart1 = function () {
       .enter()
       .append('circle')
       .attr('cx', function (d) {
-        return x(d.time);
+        return xScale(d.time);
       })
       .attr('cy', function (d) {
-        return y(d.value);
+        return yScale(d.value);
       })
       .attr('r', 5)
       .attr('stroke', 'white')
+      .attr('class', function (d, i) {
+        return 'dot_' + parseInt(d.time.getFullYear());
+      })
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave);
@@ -183,7 +207,13 @@ charts.chart1 = function () {
         return { name: d.name, value: d.values[d.values.length - 1] };
       }) // keep only the last value of each time series
       .attr('transform', function (d) {
-        return 'translate(' + x(d.value.time) + ',' + y(d.value.value) + ')';
+        return (
+          'translate(' +
+          xScale(d.value.time) +
+          ',' +
+          yScale(d.value.value) +
+          ')'
+        );
       }) // Put the text at the position of the last point
       .attr('x', 12) // shift the text a bit more right
       .text(function (d) {
@@ -242,7 +272,7 @@ charts.chart1 = function () {
       .append('text')
       .attr('x', 60)
       .attr('y', 200)
-      .attr('class', 'annotation')
+      .attr('class', 'annotation chart1')
       .html('Facebook was the first to hit <br>1 billion users in 2012');
     annotation
       .append('line')
@@ -250,6 +280,65 @@ charts.chart1 = function () {
       .attr('x2', 430)
       .attr('y1', 210)
       .attr('y2', 320)
-      .attr('class', 'annotation');
+      .attr('class', 'annotation chart1');
+  }
+
+  function updateChart(sliderValue) {
+    if (sliderValue) {
+      // filter and reformat dataset
+      data = dataSet.filter(
+        (d) => new Date(d.Year) <= new Date(sliderValue + '-01-01')
+      );
+      var dataReady = reformatData(allGroups, data);
+
+      // update the lines
+      lines
+        .data(dataReady)
+        .transition()
+        .duration(1000)
+        .attr('d', function (d) {
+          return line(d.values);
+        });
+
+      // update the dots
+      for (var i = parseInt(sliderValue) + 1; i <= MAX_YEAR; i++) {
+        d3.selectAll('.dot_' + i).style('display', 'none');
+      }
+
+      for (var i = parseInt(sliderValue); i >= MIN_YEAR; i--) {
+        d3.selectAll('.dot_' + i).style('display', 'block');
+      }
+
+      // update title
+      d3.select('#chart1-year-title').text(MIN_YEAR + ' to ' + sliderValue);
+
+      // update the annotation
+      if (parseInt(sliderValue) < 2012) {
+        d3.selectAll('.annotation.chart1')
+          .style("display", "none")
+      } else {
+        d3.selectAll('.annotation.chart1')
+        .style("display", "block")
+      }
+    }
+  }
+
+  function reformatData(allGroup, data) {
+    return allGroup.map(function (grpName) {
+      return {
+        name: grpName,
+        values: data
+          .filter(function (d) {
+            return d.Entity === grpName;
+          })
+          .map(function (d) {
+            return {
+              time: new Date(d.Year),
+              value: d.MonthlyUsers,
+              group: d.Entity,
+            };
+          }),
+      };
+    });
   }
 };

@@ -93,3 +93,14 @@ rect.annotation {
 line.annotation {
   stroke: #ff5f45;
 }
+
+#mySlider {
+  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#chart1-year-title {
+  text-align: center;
+}
