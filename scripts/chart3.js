@@ -72,7 +72,7 @@ charts.chart3 = function () {
       .text('Hours Spent Daily');
 
     // color palette = one color per subgroup
-    var color = d3.scaleOrdinal().domain(subgroups).range(d3.schemeTableau10);
+    var color = d3.scaleOrdinal().domain(subgroups).range(colorScale);
 
     // stack per subgroup
     var stackedData = d3.stack().keys(subgroups)(data);

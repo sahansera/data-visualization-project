@@ -76,7 +76,7 @@ charts.chart2 = function () {
         });
 
         // A color scale: one color for each group
-        var myColor = d3.scaleOrdinal().domain(allEntities).range(d3.schemeTableau10);
+        var myColor = d3.scaleOrdinal().domain(allEntities).range(colorScale);
 
         // X axis
         xScale.domain(

@@ -75,7 +75,7 @@ charts.chart1 = function () {
     // console.log(dataReady)
 
     // A color scale: one color for each group
-    var myColor = d3.scaleOrdinal().domain(allGroups).range(d3.schemeTableau10);
+    var myColor = d3.scaleOrdinal().domain(allGroups).range(colorScale);
 
     // Add X axis
     xScale = d3
