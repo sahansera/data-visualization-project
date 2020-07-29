@@ -1,10 +1,11 @@
 // https://www.d3-graph-gallery.com/connectedscatter.html
-// https://github.com/d3/d3-scale-chromatic
 
 charts.chart1 = function () {
   var dataSet;
   var xScale, yScale;
   var dots;
+
+  var selectedValue, myVar, isAnimationPlaying;
 
   var MAX_YEAR = 2018,
     MIN_YEAR = 2004;
@@ -22,8 +23,10 @@ charts.chart1 = function () {
     'MySpace',
   ];
 
+  var myColor = d3.scaleOrdinal().domain(allGroups).range(colorScale);
+
   // set the dimensions and margins of the graph
-  var margin = { top: 10, right: 100, bottom: 30, left: 100 },
+  var margin = { top: 10, right: 200, bottom: 30, left: 100 },
     width = 960 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -44,38 +47,44 @@ charts.chart1 = function () {
     drawAnnotation();
 
     // listen to the slider
-    d3.select('#mySlider').on('change', function (d) {
+    d3.select('#mySlider').on('input', function (d) {
       selectedValue = this.value;
       updateChart(selectedValue);
     });
 
-    // Add a legend (interactive)
-    // svg
-    // .selectAll("myLegend")
-    // .data(dataReady)
-    // .enter()
-    //   .append('g')
-    //   .append("text")
-    //     .attr('x', function(d,i){ return 30 + i*80})
-    //     .attr('y', 30)
-    //     .text(function(d) { return d.name; })
-    //     .style("fill", function(d){ return myColor(d.name) })
-    //     .style("font-size", 15)
-    //   .on("click", function(d){
-    //     // is the element currently visible ?
-    //     currentOpacity = d3.selectAll("." + d.name).style("opacity")
-    //     // Change the opacity: from 0 to 1 or from 1 to 0
-    //     d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)})
-  });
+    //listen to playback button
+    d3.select("#chart1-play-btn")
+      .on("click", function() {
+        myVar = setInterval(playAnimation, 1000);
+      });
+  });  
+
+  function playAnimation() {
+    console.log(selectedValue);
+    var val = parseInt(selectedValue);
+    if (val < MAX_YEAR) {
+      val += 1;
+      d3.select('#mySlider').property("value", val)
+      selectedValue = val.toString();
+      updateChart(selectedValue);
+      isAnimationPlaying = true;
+    } else if (selectedValue == MAX_YEAR && !isAnimationPlaying || selectedValue == undefined) {
+      // Start over
+      selectedValue = MIN_YEAR;
+      d3.select('#mySlider').property("value", MIN_YEAR.toString())
+      updateChart(selectedValue);
+      isAnimationPlaying = true;
+    }  else {
+      isAnimationPlaying = false;
+      clearInterval(myVar);
+    }
+  }
 
   function drawChart(data) {
     // Reformat the data: we need an array of arrays of {x, y} tuples
     var dataReady = reformatData(allGroups, data);
 
     // console.log(dataReady)
-
-    // A color scale: one color for each group
-    var myColor = d3.scaleOrdinal().domain(allGroups).range(colorScale);
 
     // Add X axis
     xScale = d3
@@ -196,36 +205,8 @@ charts.chart1 = function () {
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave);
 
-    // Add a legend at the end of each line
-    svg
-      .selectAll('myLabels')
-      .data(dataReady)
-      .enter()
-      .append('g')
-      .append('text')
-      .datum(function (d) {
-        return { name: d.name, value: d.values[d.values.length - 1] };
-      }) // keep only the last value of each time series
-      .attr('transform', function (d) {
-        return (
-          'translate(' +
-          xScale(d.value.time) +
-          ',' +
-          yScale(d.value.value) +
-          ')'
-        );
-      }) // Put the text at the position of the last point
-      .attr('x', 12) // shift the text a bit more right
-      .text(function (d) {
-        return d.name;
-      })
-      .style('fill', function (d) {
-        return myColor(d.name);
-      })
-      .style('font-size', 15)
-      .attr('class', function (d) {
-        return d.name;
-      });
+    // Add one dot in the legend for each name.
+    drawLegend();
   }
 
   function drawTooltips() {
@@ -314,13 +295,47 @@ charts.chart1 = function () {
 
       // update the annotation
       if (parseInt(sliderValue) < 2012) {
-        d3.selectAll('.annotation.chart1')
-          .style("display", "none")
+        d3.selectAll('.annotation.chart1').style('display', 'none');
       } else {
-        d3.selectAll('.annotation.chart1')
-        .style("display", "block")
+        d3.selectAll('.annotation.chart1').style('display', 'block');
       }
     }
+  }
+
+  function drawLegend() {
+    var size = 20;
+    svg
+      .selectAll('legendDots')
+      .data(allGroups)
+      .enter()
+      .append('circle')
+      .attr('cx', width + 70)
+      .attr('cy', function (d, i) {
+        return height - 200 + i * (size + 5);
+      })
+      .attr('r', 5)
+      .style('fill', function (d) {
+        return myColor(d);
+      });
+
+    // Add labels next to legend dots
+    svg
+      .selectAll('legendLabels')
+      .data(allGroups)
+      .enter()
+      .append('text')
+      .attr('x', width + size * 4.2)
+      .attr('y', function (d, i) {
+        return i * (size + 5) + (size / 2) + (height - 210);
+      })
+      .style('fill', function (d) {
+        return myColor(d);
+      })
+      .text(function (d) {
+        return d;
+      })
+      .attr('text-anchor', 'left')
+      .style('alignment-baseline', 'middle');
   }
 
   function reformatData(allGroup, data) {
