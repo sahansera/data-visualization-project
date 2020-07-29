@@ -55,28 +55,39 @@ charts.chart1 = function () {
     //listen to playback button
     d3.select("#chart1-play-btn")
       .on("click", function() {
-        myVar = setInterval(playAnimation, 1000);
+        if (isAnimationPlaying) {
+          // We need to clear the timer
+          clearInterval(myVar);
+          isAnimationPlaying = false;
+          d3.select("#chart1-play-btn").text("Play");
+        } else {
+          myVar = setInterval(playAnimation, 700);
+        }
       });
   });  
 
   function playAnimation() {
-    console.log(selectedValue);
     var val = parseInt(selectedValue);
     if (val < MAX_YEAR) {
-      val += 1;
-      d3.select('#mySlider').property("value", val)
+      
+      // We haven't reached the end yet, so continue
+      d3.select('#mySlider').property("value", ++val)
       selectedValue = val.toString();
       updateChart(selectedValue);
       isAnimationPlaying = true;
+      d3.select("#chart1-play-btn").text("Pause");
     } else if (selectedValue == MAX_YEAR && !isAnimationPlaying || selectedValue == undefined) {
-      // Start over
+      
+      // We have reached the end so start over
       selectedValue = MIN_YEAR;
       d3.select('#mySlider').property("value", MIN_YEAR.toString())
       updateChart(selectedValue);
       isAnimationPlaying = true;
+      d3.select("#chart1-play-btn").text("Pause");
     }  else {
       isAnimationPlaying = false;
       clearInterval(myVar);
+      d3.select("#chart1-play-btn").text("Play");
     }
   }
 
@@ -254,13 +265,19 @@ charts.chart1 = function () {
       .attr('x', 60)
       .attr('y', 200)
       .attr('class', 'annotation chart1')
-      .html('Facebook was the first to hit <br>1 billion users in 2012');
+      .text('Facebook was the first to hit 1 billion users in 2012');
     annotation
       .append('line')
       .attr('x1', 190)
-      .attr('x2', 430)
+      .attr('x2', 330)
       .attr('y1', 210)
-      .attr('y2', 320)
+      .attr('y2', 290)
+      .attr('class', 'annotation chart1');
+    annotation
+      .append("circle")
+      .attr("cx",370)
+      .attr("cy",320)
+      .attr("r", 50)
       .attr('class', 'annotation chart1');
   }
 
@@ -335,7 +352,14 @@ charts.chart1 = function () {
         return d;
       })
       .attr('text-anchor', 'left')
-      .style('alignment-baseline', 'middle');
+      .style('alignment-baseline', 'middle')
+      .on("click", function(d){
+        // is the element currently visible ?
+        currentOpacity = d3.selectAll("." + d.name).style("opacity")
+        // Change the opacity: from 0 to 1 or from 1 to 0
+        d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
+
+      });
   }
 
   function reformatData(allGroup, data) {

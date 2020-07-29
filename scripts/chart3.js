@@ -179,6 +179,7 @@ charts.chart3 = function () {
       .attr('x', function (d, i) {
         return (i * 120) + (width / 2) - (margin.right + 80);
       })
+      .style('cursor', 'pointer')
       .on("mouseover", function (d) {
         var subgroupName = d;
         

@@ -1,6 +1,6 @@
 // Globals used throughout the narrative
 var charts = {};
-var totalSlides = 7;
+var totalSlides = 8;
 var slide = 5;
 var colorScale = [
   '#4e79a7',
@@ -18,19 +18,38 @@ var colorScale = [
 // Helper functions for navigation
 function prev() {
   if (slide > 1) {
-    slide--;
+    --slide;
     nextSlide();
   }
 }
 
 function next() {
   if (slide < totalSlides) {
-    slide++;
+    ++slide;
     nextSlide();
   }
 }
 
+function startOver() {
+    slide = 1;
+    nextSlide();
+}
+
 function nextSlide() {
+  // Hide Prev button if we are on slide 1
+  if (slide == 1) {
+    d3.select("#prev").style("visibility", "hidden");
+    d3.select("#next").style("visibility", "visible");
+    d3.select("#startover").style("display", "none");
+  } else if (slide == totalSlides) {
+    d3.select("#next").style("visibility", "hidden");
+    d3.select("#startover").style("display", "block");
+  } else {
+    d3.select("#prev").style("visibility", "visible");
+    d3.select("#next").style("visibility", "visible");
+    d3.select("#startover").style("display", "none");
+  }
+
   // Clear all slides except selected one
   d3.selectAll('section').style('display', 'none');
 
@@ -43,7 +62,7 @@ function nextSlide() {
   d3.select('#slide-' + slide).style('display', 'block');
 
   // Load corresponding chart
-  if (slide > 3) {
+  if (slide > 3 && slide < totalSlides) {
     var func = charts['chart' + (slide - 3)];
     if (func == undefined) return;
     func();
@@ -55,7 +74,7 @@ function nextSlide() {
   d3.select('#dot-' + slide).attr('class', 'active-dot');
 }
 
-// D3 Event Listeners
+// D3 event listeners for key bindings
 d3.select(window).on('keydown', function () {
   switch (d3.event.keyCode) {
     case 37:
@@ -75,5 +94,8 @@ d3.select('#next').on('click', function () {
   next();
 });
 
+d3.select('#startover').on('click', function () {
+  startOver();
+});
 // Initialization
 nextSlide();

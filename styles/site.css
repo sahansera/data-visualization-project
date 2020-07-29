@@ -12,6 +12,7 @@ body {
 
 section {
   /* height: 900px; */
+  width: 960px;
 }
 
 svg {
@@ -21,6 +22,10 @@ svg {
   margin-left: auto;
   margin-right: auto;
   /* width: 40%; */
+}
+
+h1 {
+  text-align: center;
 }
 
 .tooltip {
@@ -90,8 +95,15 @@ rect.annotation {
   stroke: #ff5f45;
   fill: transparent;
 }
+
 line.annotation {
   stroke: #ff5f45;
+}
+
+circle.annotation {
+  stroke: #ff5f45;
+  stroke-dasharray: 4;
+  fill: none;
 }
 
 #mySlider {
