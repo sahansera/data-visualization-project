@@ -86,7 +86,12 @@ h1 {
 
 text.annotation {
   font-size: 15px;
-  font-style: italic;
+  stroke: #ff5f45;
+  fill: #ff5f45;
+}
+
+text.annotation.secondary {
+  font-size: 10px;
   stroke: #ff5f45;
   fill: #ff5f45;
 }

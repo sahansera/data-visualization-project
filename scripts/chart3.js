@@ -224,19 +224,30 @@ charts.chart3 = function () {
       .attr('class', 'annotation')
       .html('Mobile usage has surpassed Desktop usage over the last decade');
     annotation
+      .append('text')
+      .attr('x', 250)
+      .attr('y', 40)
+      .attr('class', 'annotation secondary')
+      .text('(hover over the bars to explore more info)');
+    annotation
       .append('line')
       .attr('x1', 610)
       .attr('x2', 800)
       .attr('y1', 20)
       .attr('y2', 40)
-      .attr('class', 'annotation')
-      
-    annotation
-      .append('line')
-      .attr('x1', 310)
-      .attr('x2', 70)
-      .attr('y1', 30)
-      .attr('y2', 300)
       .attr('class', 'annotation');
+    // annotation
+    //   .append('line')
+    //   .attr('x1', 310)
+    //   .attr('x2', 70)
+    //   .attr('y1', 30)
+    //   .attr('y2', 300)
+    //   .attr('class', 'annotation');
+    // annotation
+    //   .append("circle")
+    //   .attr("cx",710)
+    //   .attr("cy",100)
+    //   .attr("r", 50)
+    //   .attr('class', 'annotation')
   }
 };

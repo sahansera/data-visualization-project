@@ -263,9 +263,15 @@ charts.chart1 = function () {
     annotation
       .append('text')
       .attr('x', 60)
-      .attr('y', 200)
+      .attr('y', 180)
       .attr('class', 'annotation chart1')
       .text('Facebook was the first to hit 1 billion users in 2012');
+    annotation
+      .append('text')
+      .attr('x', 120)
+      .attr('y', 200)
+      .attr('class', 'annotation chart1 secondary')
+      .text('(hover over data points to explore more info)')
     annotation
       .append('line')
       .attr('x1', 190)

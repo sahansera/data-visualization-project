@@ -128,6 +128,7 @@ charts.chart2 = function () {
         d3.select('h4.chart2.title').text(
           'Social Media Usage of ' + selectedVar
         );
+        showHideAnnotations(selectedVar);
       }
     );
   }
@@ -161,6 +162,60 @@ charts.chart2 = function () {
     };
   }
 
+  function drawAnnotation() {
+    var annotation = svg.append('g');
+    annotation
+      .append('text')
+      .attr('x', 150)
+      .attr('y', 20)
+      .attr('class', 'annotation chart2 men')
+      .html('Youtube usage among Men is higher compared to Women');
+    annotation
+      .append('text')
+      .attr('x', 150)
+      .attr('y', 20)
+      .attr('class', 'annotation chart2 women')
+      .html('Facebook usage among Women is higher compared to Men');
+    annotation
+      .append('text')
+      .attr('x', 250)
+      .attr('y', 40)
+      .attr('class', 'annotation secondary')
+      .text('(hover over the bars to explore more info)');
+    // annotation
+    //   .append('line')
+    //   .attr('x1', 410)
+    //   .attr('x2', 800)
+    //   .attr('y1', 20)
+    //   .attr('y2', 40)
+    //   .attr('class', 'annotation chart2 men');
+    annotation
+      .append('line')
+      .attr('x1', 210)
+      .attr('x2', 70)
+      .attr('y1', 30)
+      .attr('y2', 80)
+      .attr('class', 'annotation chart2 men');
+    annotation
+      .append('line')
+      .attr('x1', 610)
+      .attr('x2', 800)
+      .attr('y1', 20)
+      .attr('y2', 40)
+      .attr('class', 'annotation chart2 women');
+  }
+
+  function showHideAnnotations(selectedVar) {
+    if (selectedVar === 'Men') {
+      d3.selectAll('.annotation.chart2.men').style('display', 'block');
+      d3.selectAll('.annotation.chart2.women').style('display', 'none')
+    } else {
+      d3.selectAll('.annotation.chart2.men').style('display', 'none');
+      d3.selectAll('.annotation.chart2.women').style('display', 'block')
+    }
+  }
+
   initialize();
   update('Men');
+  drawAnnotation();
 };
