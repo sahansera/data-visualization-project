@@ -1,7 +1,7 @@
 // Globals used throughout the narrative
 var charts = {};
-var totalSlides = 8;
-var slide = 5;
+var totalSlides = 6;
+var slide = 1;
 var colorScale = [
   '#4e79a7',
   '#f28e2c',
@@ -62,8 +62,8 @@ function nextSlide() {
   d3.select('#slide-' + slide).style('display', 'block');
 
   // Load corresponding chart
-  if (slide > 3 && slide < totalSlides) {
-    var func = charts['chart' + (slide - 3)];
+  if (slide > 1 && slide < totalSlides) {
+    var func = charts['chart' + (slide - 1)];
     if (func == undefined) return;
     func();
   }

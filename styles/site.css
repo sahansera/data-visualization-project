@@ -21,7 +21,6 @@ svg {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* width: 40%; */
 }
 
 h1 {
@@ -112,12 +111,22 @@ circle.annotation {
 }
 
 #mySlider {
-  width: 50%;
+  /* width: 50%;
   display: block;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto; */
+
+  width: 682px;
+}
+
+.chart1-slider-container {
+  padding-left: 100px;
 }
 
 h3 {
   text-align: center;
+}
+
+.no-flex {
+  display: unset !important;
 }
