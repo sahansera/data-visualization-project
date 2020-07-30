@@ -130,3 +130,7 @@ h3 {
 .no-flex {
   display: unset !important;
 }
+
+.chart2-btn-container {
+  margin-bottom: 5px;
+}
