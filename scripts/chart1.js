@@ -1,5 +1,4 @@
-// https://www.d3-graph-gallery.com/connectedscatter.html
-
+// Ref - https://www.d3-graph-gallery.com/connectedscatter.html
 charts.chart1 = function () {
   var dataSet;
   var xScale, yScale;
@@ -135,7 +134,7 @@ charts.chart1 = function () {
       .range([height, 0]);
 
     yAxis = svg.append('g');
-    yAxis.call(d3.axisLeft(yScale));
+    yAxis.call(d3.axisLeft(yScale).ticks(4).tickFormat(yAxisTickFormat));
 
     // text label for the y axis
     svg
@@ -220,11 +219,20 @@ charts.chart1 = function () {
     drawLegend();
   }
 
+  // Use D3's number format that generates SI prefixes for the Y axis.
+  // Ref - http://bl.ocks.org/curran/4df29e2f8c6e20ed2baf
+  var siFormat = d3.format("0.2s");
+  function yAxisTickFormat(num){
+    // Replace the confusing G (for Giga) with 
+    // the more recognizable B (for Billion).
+    return siFormat(num).replace("G", "B");
+  }
+
   function drawTooltips() {
     var tooltip = d3
       .select('#chart1')
       .append('div')
-      .style('opacity', 0)
+      .style('display', 'none')
       .attr('class', 'tooltip');
 
     // Three function that change the tooltip when user hover / move / leave a cell
@@ -240,7 +248,7 @@ charts.chart1 = function () {
             '<strong>Year: </strong>' +
             d.time.getFullYear()
         )
-        .style('opacity', 1);
+        .style('display', 'block');
     };
     var mousemove = function (d) {
       tooltip
@@ -248,7 +256,7 @@ charts.chart1 = function () {
         .style('top', d3.event.pageY - 110 + 'px');
     };
     var mouseleave = function (d) {
-      tooltip.style('opacity', 0);
+      tooltip.style('display', 'none');
     };
 
     return {

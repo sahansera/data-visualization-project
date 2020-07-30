@@ -125,7 +125,7 @@ charts.chart2 = function () {
             return myColor(d.Entity);
           });
 
-        d3.select('h4.chart2.title').text(
+        d3.select('h3.chart2.title').text(
           'Social Media Usage of ' + selectedVar
         );
         showHideAnnotations(selectedVar);
@@ -189,20 +189,22 @@ charts.chart2 = function () {
     //   .attr('y1', 20)
     //   .attr('y2', 40)
     //   .attr('class', 'annotation chart2 men');
-    annotation
-      .append('line')
-      .attr('x1', 210)
-      .attr('x2', 70)
-      .attr('y1', 30)
-      .attr('y2', 80)
-      .attr('class', 'annotation chart2 men');
+
     annotation
       .append('line')
       .attr('x1', 610)
       .attr('x2', 800)
       .attr('y1', 20)
       .attr('y2', 40)
+      .attr('class', 'annotation chart2 men');
+    annotation
+      .append('line')
+      .attr('x1', 210)
+      .attr('x2', 70)
+      .attr('y1', 30)
+      .attr('y2', 80)
       .attr('class', 'annotation chart2 women');
+;
   }
 
   function showHideAnnotations(selectedVar) {
