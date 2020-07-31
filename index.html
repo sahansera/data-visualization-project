@@ -10,9 +10,8 @@
     <title>CS 498 - Narrative Visualization Project</title>
   </head>
   <body>
-    <div>
       <div class="slides">
-        <div class="btn-container">
+        <header class="btn-container">
           <a class="btn" id="prev">&lsaquo; Previous</a>
           <ul class="navigation">
             <li id="dot-1" />
@@ -21,23 +20,31 @@
             <li id="dot-4" />
             <li id="dot-5" />
             <li id="dot-6" />
-            <li id="dot-7" />
-            <li id="dot-8" />
           </ul>
           <a class="btn" id="next">Next &rsaquo;</a>
           <a class="btn" id="startover">Start Over</a>
-      </div>
-    </div>
+      </header>
         <section id="slide-1">
           <h1>Impact of Social Media on People</h1>
-          <p>A narrative visualization of how social media has impacted the way people spend their time</p>
+          <p>Social media has definitely changed the world in the last decade. This is a narrative visualization of how social media has impacted the way people spend their time.</p>
+          <p>The narrative structure being used is an interactive slideshow, which is a hybrid structure in the narrative visualization spectrum.</p>
+          <p>You can navigate through the slides either by using the "Next" and "Previous" buttons at the top or by using left and right arrow keys on your keyboard</p>
+          <p>This presentation has been tested to work on both Chrome and Firefox browser with a screen width of 1100px or higher.</p>
           <p>Created by Sahan Serasinghe</p>		
         </section>
    
         <section id="slide-2">
-          <h1>Monthly Active Users on Social Media Platforms - Worldwide</h1>
-          <p>Most of the social media platforms that survived the last decade have shifted significantly in what they offer users. Twitter, for example, didn’t allow users to upload videos or images in the beginning. Since 2011 this is possible and today more than 50% of the content viewed on Twitter includes images and videos.</p>
-          <h3 id="chart1-year-title">2004 to 2018</h3>
+          <h1>Inception of Major Social Media Networks</h1>
+          <div class="narration">
+            <p>We will first look at how social media networks have grown from its inception. With a total global population of <b>7.7 billion</b> there are atleast <b>3.3 billion</b> people online. 
+              It is reported that Facebook alone has reached <b>2.5 billion</b> monthly active users.
+            </p>
+            <p>Social media networks such as MySpace who dominated the space has disappeared by 2008 and competitors such as Facebook has remained dominant in the last decade.</p>
+            <p>The below chart depicts the growth of the prominent social media networks. 
+              You can drill down on a particular year using the slider as well as see their growth from 2004 to 2018 as an animation using the <kbd>Play</kbd> button.</p>
+          </div>
+          
+          <h3 id="chart1-year-title">Monthly Active Users From 2004 to 2018</h3>
           <div id="chart1"></div>
           <div class="chart1-slider-container">
             <input type="range" name="mySlider" id=mySlider min="2004" max="2018" value="2018" step="1" list="steplist">
@@ -103,12 +110,10 @@
             <li>https://www.ebnet.co.za/single-post/2018/10/24/Most-popular-social-networks-worldwide-as-of-October-2018-ranked-by-number-of-active-users-in-millions</li>
           </ul>
         </section>
-      </div>
-
-      <div id="tooltip" style="opacity: 0;"></div>
+    </div>
 
     <!-- Load d3.js -->
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 
     <script src="scripts/main.js"></script>
     <script src="scripts/chart1.js"></script>

@@ -140,7 +140,7 @@ charts.chart1 = function () {
     svg
       .append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - margin.left)
+      .attr('y', 0 - margin.left + 30)
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
@@ -322,7 +322,7 @@ charts.chart1 = function () {
       }
 
       // update title
-      d3.select('#chart1-year-title').text(MIN_YEAR + ' to ' + sliderValue);
+      d3.select('#chart1-year-title').text("Monthly Active Users From " + MIN_YEAR + ' to ' + sliderValue);
 
       // update the annotation
       if (parseInt(sliderValue) < 2012) {
