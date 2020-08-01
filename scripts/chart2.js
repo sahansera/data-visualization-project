@@ -254,5 +254,33 @@ charts.chart2 = function () {
         .attr('r', 100)
         .attr('class', 'annotation chart2');
     }
+
+    if (selectedGroup == '65+') {
+      annotation
+        .append('text')
+        .attr('x', 400)
+        .attr('y', 180)
+        .attr('class', 'annotation chart2')
+        .text('Older adults have increased in recent years');
+      annotation
+        .append('text')
+        .attr('x', 420)
+        .attr('y', 200)
+        .attr('class', 'annotation chart2 secondary')
+        .text('(hover over data points to explore more info)');
+      annotation
+        .append('line')
+        .attr('x1', 530)
+        .attr('x2', 590)
+        .attr('y1', 200)
+        .attr('y2', 290)
+        .attr('class', 'annotation chart2');
+      annotation
+        .append('circle')
+        .attr('cx', 630)
+        .attr('cy', 380)
+        .attr('r', 100)
+        .attr('class', 'annotation chart2');
+    }
   }
 };
