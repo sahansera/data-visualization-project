@@ -1,6 +1,13 @@
 // Ref - https://www.d3-graph-gallery.com/graph/barplot_horizontal.html
 
 charts.chart2 = function () {
+  var xScale, yScale;
+  var dataSet;
+  var line;
+  var myColor;
+  var selectedGroup = '18-29';
+  var focus;
+
   // set the dimensions and margins of the graph
   var margin = { top: 20, right: 30, bottom: 40, left: 90 },
     width = 960 - margin.left - margin.right,
@@ -15,26 +22,28 @@ charts.chart2 = function () {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  // Clear the dropwdown
-  d3.select("#chart2-select")
-    .selectAll("option")
-    .remove();
-
-  var bisectDate = d3.bisector(function (d) {
-    return d.date;
-  }).left;
+  // Initialize the dropdown
+  d3.select('#chart2-select').selectAll('option').remove();
 
   // Parse the data
   d3.csv('data/users-by-age.csv', function (data) {
-    console.log(data);
+    dataSet = data;
+    initialize();
 
-    // List of groups (here I have one group per column)
-    var allGroup = data.columns.slice(1, data.columns.length);
+    // When the button is changed, run the updateChart function
+    d3.select('#chart2-select').on('change', function (d) {
+      var selectedOption = d3.select(this).property('value');
+      update(selectedOption);
+    });
+  });
+
+  function initialize() {
+    var allGroups = dataSet.columns.slice(1, dataSet.columns.length);
 
     // add the options to the button
     d3.select('#chart2-select')
       .selectAll('myOptions')
-      .data(allGroup)
+      .data(allGroups)
       .enter()
       .append('option')
       .text(function (d) {
@@ -45,13 +54,13 @@ charts.chart2 = function () {
       }); // corresponding value returned by the button
 
     // A color scale: one color for each group
-    var myColor = d3.scaleOrdinal().domain(allGroup).range(colorScale);
+    myColor = d3.scaleOrdinal().domain(allGroups).range(colorScale);
 
     // Add X axis --> it is a date format
-    var x = d3
+    xScale = d3
       .scaleTime()
       .domain(
-        d3.extent(data, function (d) {
+        d3.extent(dataSet, function (d) {
           return new Date(parseInt(d.Date), 0);
         })
       )
@@ -60,7 +69,7 @@ charts.chart2 = function () {
     svg
       .append('g')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(xScale));
 
     // text label for the x axis
     svg
@@ -73,27 +82,27 @@ charts.chart2 = function () {
       .text('Year');
 
     // Add Y axis
-    var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
-    svg.append('g').call(d3.axisLeft(y));
+    yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+    svg.append('g').call(d3.axisLeft(yScale));
 
     // Initialize line with group a
-    var line = svg
+    line = svg
       .append('g')
       .append('path')
-      .datum(data)
+      .datum(dataSet)
       .attr(
         'd',
         d3
           .line()
           .x(function (d) {
-            return x(new Date(+d.Date, 0));
+            return xScale(new Date(+d.Date, 0));
           })
           .y(function (d) {
-            return y(+d['18-29']);
+            return yScale(+d[selectedGroup]);
           })
       )
       .attr('stroke', function (d) {
-        return myColor('18-29');
+        return myColor(selectedGroup);
       })
       .style('stroke-width', 4)
       .style('fill', 'none');
@@ -108,107 +117,107 @@ charts.chart2 = function () {
       .style('text-anchor', 'middle')
       .text('Percentage');
 
-    var focus = svg.append('g').attr('class', 'focus').style('display', 'none');
+      focus = svg.append('g').attr('class', 'focus').style('display', 'none');
+      focus.append('circle')
+      .attr('r', 5)
+      .attr('fill', function(d) {
+        return myColor(selectedGroup);
+      });
+  
+      var mouseEventHandlers = drawTooltips();
+      var mouseover = mouseEventHandlers.mouseover,
+        mouseleave = mouseEventHandlers.mouseleave,
+        mousemove = mouseEventHandlers.mousemove;
+  
+      svg
+        .append('rect')
+        .attr('class', 'overlay')
+        .attr('width', width)
+        .attr('height', height)
+        .on('mouseover', mouseover)
+        .on('mouseleave', mouseleave)
+        .on('mousemove', mousemove);
+  }
 
-    focus.append('circle').attr('r', 5);
+  function update(selection) {
+    selectedGroup = selection;
+    // Create new data with the selection?
+    var dataFilter = dataSet.map(function (d) {
+      return { time: new Date(+d.Date, 0), value: +d[selectedGroup] };
+    });
 
-    focus.append('div').style('display', 'none').attr('class', 'tooltip');
-
-    focus
-      .append('text')
-      .attr('class', 'tooltip-date')
-      .attr('x', 18)
-      .attr('y', -2);
-
-    focus.append('text').attr('x', 18).attr('y', 18).text('Percentage:');
-
-    focus
-      .append('text')
-      .attr('class', 'tooltip-likes')
-      .attr('x', 100)
-      .attr('y', 18);
-
-    svg
-      .append('rect')
-      .attr('class', 'overlay')
-      .attr('width', width)
-      .attr('height', height)
-      .on('mouseover', function () {
-        focus.style('display', null);
-      })
-      .on('mouseout', function () {
-        focus.style('display', 'none');
-      })
-      .on('mousemove', mousemove);
-
-    function mousemove() {
-      var x0 = x.invert(d3.mouse(this)[0]),
-        i = bisectDate(data, x0, 1),
-        d0 = data[i - 1],
-        d1 = data[i],
-        d = x0 - parseInt(d0.Date) > parseInt(d1.Date) - x0 ? d1 : d0;
-
-      var filteredByDate = data.filter((x) => x.Date == x0.getFullYear());
-
-      var xValue = new Date(x0.getFullYear() + '-01-01');
-      var yValue = filteredByDate[0]['18-29'];
-      focus.attr(
-        'transform',
-        'translate(' + x(xValue) + ',' + y(+yValue) + ')'
-      );
-
-      // focus.select(".tooltip")
-      //         .html(
-      //           '<strong>Platform: </strong>' +
-      //             x0.getFullYear() +
-      //             '<br>' +
-      //             '<strong>Users: </strong>' +
-      //             yValue
-      //         )
-      //         .style('display', 'block');
-
-      // focus.select(".tooltip")
-      //   .style('left', d3.event.pageX + 'px')
-      //   .style('top', d3.event.pageY - 110 + 'px');
-
-      focus.select('.tooltip-date').text('Year: ' + x0.getFullYear());
-      focus.select('.tooltip-likes').text(yValue + '%');
-    }
-
-    // A function that update the chart
-    function update(selectedGroup) {
-      // Create new data with the selection?
-      var dataFilter = data.map(function (d) {
-        return { time: new Date(+d.Date, 0), value: +d[selectedGroup] };
+    // Give these new data to update line
+    line
+      .datum(dataFilter)
+      .transition()
+      .duration(1000)
+      .attr(
+        'd',
+        d3
+          .line()
+          .x(function (d) {
+            return xScale(+d.time);
+          })
+          .y(function (d) {
+            return yScale(+d.value);
+          })
+      )
+      .attr('stroke', function (d) {
+        return myColor(selectedGroup);
       });
 
-      // Give these new data to update line
-      line
-        .datum(dataFilter)
-        .transition()
-        .duration(1000)
-        .attr(
-          'd',
-          d3
-            .line()
-            .x(function (d) {
-              return x(+d.time);
-            })
-            .y(function (d) {
-              return y(+d.value);
-            })
-        )
-        .attr('stroke', function (d) {
-          return myColor(selectedGroup);
-        });
-    }
+    focus.select('circle').attr('fill', function(d) {
+      return myColor(selectedGroup);
+    })
+  }
 
-    // When the button is changed, run the updateChart function
-    d3.select('#chart2-select').on('change', function (d) {
-      // recover the option that has been chosen
-      var selectedOption = d3.select(this).property('value');
-      // run the updateChart function with this selected option
-      update(selectedOption);
-    });
-  });
+  function drawTooltips() {
+    var tooltip = d3
+      .select('#chart2')
+      .append('div')
+      .style('display', 'none')
+      .attr('class', 'tooltip');
+
+    // Three function that change the tooltip when user hover / move / leave a cell
+    var mouseover = function (d) {
+      d3.select('.focus').style('display', null);
+    };
+    var mousemove = function (d) {
+      var x0 = xScale.invert(d3.mouse(this)[0]);
+      var filteredData = dataSet.find((x) => x.Date == x0.getFullYear());
+
+      var xValue = new Date(x0.getFullYear() + '-01-01');
+      var yValue = filteredData[selectedGroup];
+
+      focus.attr(
+        'transform',
+        'translate(' + xScale(xValue) + ',' + yScale(+yValue) + ')'
+      );
+
+      tooltip
+        .html(
+          '<strong>Year: </strong>' +
+            x0.getFullYear() +
+            '<br>' +
+            '<strong>Percentage: </strong>' +
+            yValue
+        )
+        .style('display', 'block');
+
+      tooltip
+        .style('left', d3.event.pageX + 'px')
+        .style('top', d3.event.pageY - 80 + 'px');
+    };
+
+    var mouseleave = function (d) {
+      focus.style('display', 'none');
+      tooltip.style('display', 'none');
+    };
+
+    return {
+      mouseover: mouseover,
+      mouseleave: mouseleave,
+      mousemove: mousemove,
+    };
+  }
 };
