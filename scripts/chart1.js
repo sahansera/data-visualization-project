@@ -39,7 +39,7 @@ charts.chart1 = function () {
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   //Read the data
-  d3.csv('../data/users-by-social-media-platform.csv', function (data) {
+  d3.csv('data/users-by-social-media-platform.csv', function (data) {
     dataSet = data;
     drawChart(data);
 
@@ -307,10 +307,11 @@ charts.chart1 = function () {
       lines
         .data(dataReady)
         .transition()
-        .duration(1000)
+        .duration(200)
         .attr('d', function (d) {
           return line(d.values);
-        });
+        })
+        .ease(d3.easeLinear);
 
       // update the dots
       for (var i = parseInt(sliderValue) + 1; i <= MAX_YEAR; i++) {
