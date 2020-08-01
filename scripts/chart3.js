@@ -22,7 +22,7 @@ charts.chart3 = function () {
 
   // Parse the Data
   d3.csv(
-    '../data/daily-hours-spent-with-digital-media-per-adult-user.csv',
+    'data/daily-hours-spent-with-digital-media-per-adult-user.csv',
     function (data) {
       drawChart(data);
       drawAnnotation();

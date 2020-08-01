@@ -16,7 +16,7 @@ charts.chart4 = function () {
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   // Parse the Data
-  d3.csv('../data/users-by-age.csv', function (data) {
+  d3.csv('data/users-by-age.csv', function (data) {
     console.log(data);
 
     // List of groups (here I have one group per column)

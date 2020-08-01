@@ -68,7 +68,7 @@ charts.chart2 = function () {
 
     // Parse the Data
     d3.csv(
-      '../data/percent-of-men-and-women-using-social-media-platforms-in-the-us.csv',
+      'data/percent-of-men-and-women-using-social-media-platforms-in-the-us.csv',
       function (data) {
 
         var allEntities = data.map(function (d) {
