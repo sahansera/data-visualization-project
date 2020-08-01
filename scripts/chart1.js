@@ -1,4 +1,5 @@
 // Ref - https://www.d3-graph-gallery.com/connectedscatter.html
+
 charts.chart1 = function () {
   var dataSet;
   var xScale, yScale;

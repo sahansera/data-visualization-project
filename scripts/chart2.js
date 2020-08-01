@@ -29,6 +29,7 @@ charts.chart2 = function () {
   d3.csv('data/users-by-age.csv', function (data) {
     dataSet = data;
     initialize();
+    drawAnnotation();
 
     // When the button is changed, run the updateChart function
     d3.select('#chart2-select').on('change', function (d) {
@@ -117,26 +118,27 @@ charts.chart2 = function () {
       .style('text-anchor', 'middle')
       .text('Percentage');
 
-      focus = svg.append('g').attr('class', 'focus').style('display', 'none');
-      focus.append('circle')
+    focus = svg.append('g').attr('class', 'focus').style('display', 'none');
+    focus
+      .append('circle')
       .attr('r', 5)
-      .attr('fill', function(d) {
+      .attr('fill', function (d) {
         return myColor(selectedGroup);
       });
-  
-      var mouseEventHandlers = drawTooltips();
-      var mouseover = mouseEventHandlers.mouseover,
-        mouseleave = mouseEventHandlers.mouseleave,
-        mousemove = mouseEventHandlers.mousemove;
-  
-      svg
-        .append('rect')
-        .attr('class', 'overlay')
-        .attr('width', width)
-        .attr('height', height)
-        .on('mouseover', mouseover)
-        .on('mouseleave', mouseleave)
-        .on('mousemove', mousemove);
+
+    var mouseEventHandlers = drawTooltips();
+    var mouseover = mouseEventHandlers.mouseover,
+      mouseleave = mouseEventHandlers.mouseleave,
+      mousemove = mouseEventHandlers.mousemove;
+
+    svg
+      .append('rect')
+      .attr('class', 'overlay')
+      .attr('width', width)
+      .attr('height', height)
+      .on('mouseover', mouseover)
+      .on('mouseleave', mouseleave)
+      .on('mousemove', mousemove);
   }
 
   function update(selection) {
@@ -166,9 +168,10 @@ charts.chart2 = function () {
         return myColor(selectedGroup);
       });
 
-    focus.select('circle').attr('fill', function(d) {
+    focus.select('circle').attr('fill', function (d) {
       return myColor(selectedGroup);
-    })
+    });
+    drawAnnotation();
   }
 
   function drawTooltips() {
@@ -219,5 +222,37 @@ charts.chart2 = function () {
       mouseleave: mouseleave,
       mousemove: mousemove,
     };
+  }
+
+  function drawAnnotation() {
+    d3.selectAll('.annotation.chart2').remove();
+    var annotation = svg.append('g');
+    if (selectedGroup == '18-29') {
+      annotation
+        .append('text')
+        .attr('x', 400)
+        .attr('y', 180)
+        .attr('class', 'annotation chart2')
+        .text('Young adults were the early adopters of social media');
+      annotation
+        .append('text')
+        .attr('x', 420)
+        .attr('y', 200)
+        .attr('class', 'annotation chart2 secondary')
+        .text('(hover over data points to explore more info)');
+      annotation
+        .append('line')
+        .attr('x1', 330)
+        .attr('x2', 390)
+        .attr('y1', 180)
+        .attr('y2', 180)
+        .attr('class', 'annotation chart2');
+      annotation
+        .append('circle')
+        .attr('cx', 230)
+        .attr('cy', 180)
+        .attr('r', 100)
+        .attr('class', 'annotation chart2');
+    }
   }
 };
