@@ -3,7 +3,7 @@
 * --------------------------------------- */
 
 body {
-  font-family: Open Sans;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -146,6 +146,29 @@ h3 {
   display: unset !important;
 }
 
-.chart2-btn-container {
+.chart3-btn-container {
   margin-bottom: 5px;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.tooltip-date, .tooltip-likes {
+  font-weight: bold;
+}
+
+.focus circle {
+  fill: steelblue;
+}
+
+.focus text {
+  font-size: 14px;
+}
+
+.narration {
+  border-radius: 10px;
+  padding: 10px;
+  background-color: aliceblue;
 }

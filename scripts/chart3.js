@@ -1,18 +1,18 @@
-// https://www.d3-graph-gallery.com/graph/barplot_stacked_hover.html
+// https://www.d3-graph-gallery.com/graph/barplot_button_data_hard.html
 
 charts.chart3 = function () {
   // set the dimensions and margins of the graph
-  var margin = {
-      top: 20,
-      right: 30,
-      bottom: 90,
-      left: 50,
-    },
+  var margin = { top: 30, right: 30, bottom: 70, left: 60 },
     width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    height = 400 - margin.top - margin.bottom;
+
+  // globals which we need later in other functions
+  var xScale, yScale;
+  var xAxis, yAxis;
+  var selection;
 
   // append the svg object to the body of the page
-  var svg = d3
+  svg = d3
     .select('#chart3')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -20,46 +20,25 @@ charts.chart3 = function () {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  // Parse the Data
-  d3.csv(
-    'data/daily-hours-spent-with-digital-media-per-adult-user.csv',
-    function (data) {
-      drawChart(data);
-      drawAnnotation();
-    }
-  );
+  function initialize() {
 
-  function drawChart(data) {
-    // List of subgroups = header of the csv files
-    var subgroups = data.columns.slice(1);
-
-    // List of groups
-    var groups = d3
-      .map(data, function (d) {
-        return d.Year;
-      })
-      .keys();
-
-    // Add X axis
-    var x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x).tickSizeOuter(0));
+    // Initialize the X axis
+    xScale = d3.scaleBand().range([0, width]).padding(0.2);
+    xAxis = svg.append('g').attr('transform', 'translate(0,' + height + ')');
 
     // text label for the x axis
     svg
       .append('text')
       .attr(
         'transform',
-        'translate(' + width / 2 + ' ,' + (height + margin.top + 30) + ')'
+        'translate(' + width / 2 + ' ,' + (height + margin.top + 20) + ')'
       )
       .style('text-anchor', 'middle')
-      .text('Year');
+      .text('Social Media Platform');
 
-    // Add Y axis
-    var y = d3.scaleLinear().domain([0, 7]).range([height, 0]);
-    svg.append('g').call(d3.axisLeft(y));
+    // Initialize the Y axis
+    yScale = d3.scaleLinear().range([height, 0]);
+    yAxis = svg.append('g').attr('class', 'myYaxis');
 
     // text label for the y axis
     svg
@@ -69,54 +48,89 @@ charts.chart3 = function () {
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
-      .text('Hours Spent Daily');
+      .text('Percentage');
 
-    // color palette = one color per subgroup
-    var color = d3.scaleOrdinal().domain(subgroups).range(colorScale);
+    // event handlers for buttons
+    d3.select('button.chart3.men').on('click', function () {
+      update('Men');
+    });
 
-    // stack per subgroup
-    var stackedData = d3.stack().keys(subgroups)(data);
+    d3.select('button.chart3.women').on('click', function () {
+      update('Women');
+    });
+  }
 
-    var mouseEventHandlers = drawTooltips();
-    var mouseover = mouseEventHandlers.mouseover,
-      mouseleave = mouseEventHandlers.mouseleave,
-      mousemove = mouseEventHandlers.mousemove;
+  // A function that create / update the plot for a given variable:
+  function update(selectedVar) {
 
-    // Show the bars
-    svg
-      .append('g')
-      .selectAll('g')
-      // Enter in the stack data = loop key per key = group per group
-      .data(stackedData)
-      .enter()
-      .append('g')
-      .attr('fill', function (d) {
-        return color(d.key);
-      })
-      .attr("class", function(d){ return "myRect " + d.key })
-      .selectAll('rect')
-      // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data(function (d) {
-        return d;
-      })
-      .enter()
-      .append('rect')
-      .attr('x', function (d) {
-        return x(d.data.Year);
-      })
-      .attr('y', function (d) {
-        return y(d[1]);
-      })
-      .attr('height', function (d) {
-        return y(d[0]) - y(d[1]);
-      })
-      .attr('width', x.bandwidth())
-      .attr('stroke', 'grey')
-      .on('mouseover', mouseover)
-      .on('mousemove', mousemove)
-      .on('mouseleave', mouseleave);
+    // update selection because it's used by tooltip function
+    selection = selectedVar;
 
-    drawLegend(color);
+    // Parse the Data
+    d3.csv(
+      'data/percent-of-men-and-women-using-social-media-platforms-in-the-us.csv',
+      function (data) {
+
+        var allEntities = data.map(function (d) {
+          return d.Entity;
+        });
+
+        // A color scale: one color for each group
+        var myColor = d3.scaleOrdinal().domain(allEntities).range(colorScale);
+
+        // X axis
+        xScale.domain(
+          allEntities
+        );
+        xAxis.transition().duration(1000).call(d3.axisBottom(xScale));
+
+        // Add Y axis
+        yScale.domain([
+          0,
+          d3.max(data, function (d) {
+            return +d[selectedVar];
+          }),
+        ]);
+        yAxis.transition().duration(1000).call(d3.axisLeft(yScale));
+
+        // variable u: map data to existing bars
+        var u = svg.selectAll('rect').data(data);
+
+        // draw tooltips
+        var mouseEventHandlers = drawTooltips();
+        var mouseover = mouseEventHandlers.mouseover,
+          mouseleave = mouseEventHandlers.mouseleave,
+          mousemove = mouseEventHandlers.mousemove;
+
+        // update bars
+        u.enter()
+          .append('rect')
+          .on('mouseover', mouseover)
+          .on('mousemove', mousemove)
+          .on('mouseleave', mouseleave)
+          .merge(u)
+          .transition()
+          .duration(1000)
+          .attr('x', function (d) {
+            return xScale(d.Entity);
+          })
+          .attr('y', function (d) {
+            return yScale(d[selectedVar]);
+          })
+          .attr('width', xScale.bandwidth())
+          .attr('height', function (d) {
+            return height - yScale(d[selectedVar]);
+          })
+          .attr('fill', function (d, i) {
+            return myColor(d.Entity);
+          });
+
+        d3.select('h3.chart3.title').text(
+          'Social Media Usage of ' + selectedVar + ' in 2019'
+        );
+        showHideAnnotations(selectedVar);
+      }
+    );
   }
 
   function drawTooltips() {
@@ -127,26 +141,17 @@ charts.chart3 = function () {
       .attr('class', 'tooltip');
 
     // Three function that change the tooltip when user hover / move / leave a cell
-    var mouseover = function (d) {
-      var subgroupName = d3.select(this.parentNode).datum().key;
-      var subgroupValue = d.data[subgroupName];
+    mouseover = function (d) {
       tooltip
-        .html(
-          '<strong>' +
-            subgroupName +
-            '</strong>' +
-            '<br>' +
-            subgroupValue +
-            ' hours per adult user '
-        )
+        .html('<strong>' + d.Entity + '</strong>' + '<br>' + d[selection] + '%')
         .style('opacity', 1);
     };
-    var mousemove = function (d) {
+    mousemove = function (d) {
       tooltip
         .style('left', d3.event.pageX + 'px')
         .style('top', d3.event.pageY - 80 + 'px');
     };
-    var mouseleave = function (d) {
+    mouseleave = function (d) {
       tooltip.style('opacity', 0);
     };
 
@@ -157,97 +162,62 @@ charts.chart3 = function () {
     };
   }
 
-  function drawLegend(color) {
-    // add legend
-    orderedSubgroups = ['Mobile', 'Desktop', 'Other'];
-    var legend = svg
-      .selectAll('.legend')
-      .data(orderedSubgroups)
-      .enter()
-      .append('g');
-
-    legend
-      .append('rect')
-      .attr('fill', color)
-      .attr('width', 20)
-      .attr('height', 20)
-      .attr('class', function (d) { return "legend " + d; })
-      .attr('y', function (d, i) {
-        return height + 60;
-      })
-      // .attr('x', width - (margin.right - 250));
-      .attr('x', function (d, i) {
-        return (i * 120) + (width / 2) - (margin.right + 80);
-      })
-      .style('cursor', 'pointer')
-      .on("mouseover", function (d) {
-        var subgroupName = d;
-        
-        d3.selectAll(".myRect").style("opacity", 0.2);
-        
-        d3.selectAll(".myRect."+subgroupName)
-          .style("opacity", 1);
-
-        d3.select(".legend."+subgroupName)
-          .style("stroke", "black")
-          .style("stroke-width", "2");
-
-      })
-      .on('mouseleave', function (d) {
-        d3.selectAll(".myRect").style("opacity", 1);
-        d3.select(".legend."+d)
-          .style("stroke", "none")
-          .style("stroke-width", "0");
-      });
-
-    legend
-      .append('text')
-      .attr('class', 'label')
-      // .attr("height", 20)
-      .attr('y', height + 75)
-      // .attr('x', width - (margin.right - 290))
-      .attr('x', function (d, i) {
-        return (i * 120) + ((width / 2) + 25) - (margin.right + 80);
-      })
-      .attr('text-anchor', 'start')
-      .text(function (d, i) {
-        return orderedSubgroups[i];
-      });
-  }
-
   function drawAnnotation() {
     var annotation = svg.append('g');
     annotation
       .append('text')
       .attr('x', 150)
       .attr('y', 20)
-      .attr('class', 'annotation')
-      .html('Mobile usage has surpassed Desktop usage over the last decade');
+      .attr('class', 'annotation chart3 men')
+      .html('Youtube usage among Men is higher compared to Women');
+    annotation
+      .append('text')
+      .attr('x', 150)
+      .attr('y', 20)
+      .attr('class', 'annotation chart3 women')
+      .html('Facebook usage among Women is higher compared to Men');
     annotation
       .append('text')
       .attr('x', 250)
       .attr('y', 40)
       .attr('class', 'annotation secondary')
       .text('(hover over the bars to explore more info)');
+    // annotation
+    //   .append('line')
+    //   .attr('x1', 410)
+    //   .attr('x2', 800)
+    //   .attr('y1', 20)
+    //   .attr('y2', 40)
+    //   .attr('class', 'annotation chart3 men');
+
     annotation
       .append('line')
       .attr('x1', 610)
       .attr('x2', 800)
       .attr('y1', 20)
       .attr('y2', 40)
-      .attr('class', 'annotation');
-    // annotation
-    //   .append('line')
-    //   .attr('x1', 310)
-    //   .attr('x2', 70)
-    //   .attr('y1', 30)
-    //   .attr('y2', 300)
-    //   .attr('class', 'annotation');
-    // annotation
-    //   .append("circle")
-    //   .attr("cx",710)
-    //   .attr("cy",100)
-    //   .attr("r", 50)
-    //   .attr('class', 'annotation')
+      .attr('class', 'annotation chart3 men');
+    annotation
+      .append('line')
+      .attr('x1', 210)
+      .attr('x2', 70)
+      .attr('y1', 30)
+      .attr('y2', 80)
+      .attr('class', 'annotation chart3 women');
+;
   }
+
+  function showHideAnnotations(selectedVar) {
+    if (selectedVar === 'Men') {
+      d3.selectAll('.annotation.chart3.men').style('display', 'block');
+      d3.selectAll('.annotation.chart3.women').style('display', 'none')
+    } else {
+      d3.selectAll('.annotation.chart3.men').style('display', 'none');
+      d3.selectAll('.annotation.chart3.women').style('display', 'block')
+    }
+  }
+
+  initialize();
+  update('Men');
+  drawAnnotation();
 };

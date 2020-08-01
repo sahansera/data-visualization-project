@@ -4,7 +4,7 @@ charts.chart1 = function () {
   var xScale, yScale;
   var dots;
 
-  var selectedValue, myVar, isAnimationPlaying;
+  var selectedValue = "2018", animationCallback, isAnimationPlaying;
 
   var MAX_YEAR = 2018,
     MIN_YEAR = 2004;
@@ -38,11 +38,10 @@ charts.chart1 = function () {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  //Read the data
+  // Read the data
   d3.csv('data/users-by-social-media-platform.csv', function (data) {
     dataSet = data;
     drawChart(data);
-
     drawAnnotation();
 
     // listen to the slider
@@ -51,16 +50,16 @@ charts.chart1 = function () {
       updateChart(selectedValue);
     });
 
-    //listen to playback button
+    // listen to playback button
     d3.select("#chart1-play-btn")
       .on("click", function() {
         if (isAnimationPlaying) {
           // We need to clear the timer
-          clearInterval(myVar);
+          clearInterval(animationCallback);
           isAnimationPlaying = false;
           d3.select("#chart1-play-btn").text("Play");
         } else {
-          myVar = setInterval(playAnimation, 700);
+          animationCallback = setInterval(playAnimation, 700);
         }
       });
   });  
@@ -85,7 +84,7 @@ charts.chart1 = function () {
       d3.select("#chart1-play-btn").text("Pause");
     }  else {
       isAnimationPlaying = false;
-      clearInterval(myVar);
+      clearInterval(animationCallback);
       d3.select("#chart1-play-btn").text("Play");
     }
   }
