@@ -105,14 +105,14 @@ select {
 
 text.annotation {
   font-size: 15px;
-  stroke: #ff5f45;
-  fill: #ff5f45;
+  stroke: #E8336D;
+  fill: #E8336D;
 }
 
 text.annotation.secondary {
   font-size: 10px;
-  stroke: #ff5f45;
-  fill: #ff5f45;
+  stroke: #E8336D;
+  fill: #E8336D;
 }
 
 rect.annotation {
@@ -158,5 +158,7 @@ h3 {
 .narration {
   border-radius: 10px;
   padding: 10px;
-  background-color: aliceblue;
+  background-color: #f8f9fa;
+  /* font-size: 1rem;
+  line-height: 1.5; */
 }

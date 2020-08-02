@@ -203,7 +203,8 @@ charts.chart2 = function () {
             x0.getFullYear() +
             '<br>' +
             '<strong>Percentage: </strong>' +
-            yValue
+            yValue + 
+            "%"
         )
         .style('display', 'block');
 

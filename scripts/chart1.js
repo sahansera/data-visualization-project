@@ -243,7 +243,7 @@ charts.chart1 = function () {
             d.group +
             '<br>' +
             '<strong>Users: </strong>' +
-            d.value +
+            d3.format(",")(parseInt(d.value)) +
             '<br>' +
             '<strong>Year: </strong>' +
             d.time.getFullYear()

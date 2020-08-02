@@ -1,7 +1,7 @@
 // Globals used throughout the narrative
 var charts = {};
 var totalSlides = 6;
-var slide = 2;
+var slide = 1;
 var colorScale = [
   '#4e79a7',
   '#f28e2c',
