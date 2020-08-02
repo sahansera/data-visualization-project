@@ -44,14 +44,14 @@ function nextSlide() {
   // Hide Prev button if we are on slide 1
   if (slide == 1) {
     d3.select("#prev").style("visibility", "hidden");
-    d3.select("#next").style("visibility", "visible");
+    d3.select("#next").style("display", "block");
     d3.select("#startover").style("display", "none");
   } else if (slide == totalSlides) {
-    d3.select("#next").style("visibility", "hidden");
+    d3.select("#next").style("display", "none");
     d3.select("#startover").style("display", "block");
   } else {
     d3.select("#prev").style("visibility", "visible");
-    d3.select("#next").style("visibility", "visible");
+    d3.select("#next").style("display", "block");
     d3.select("#startover").style("display", "none");
   }
 
