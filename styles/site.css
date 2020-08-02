@@ -32,6 +32,12 @@ select {
   height: 30px;
 }
 
+kbd {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 5px;
+}
+
 .tooltip {
   position: absolute;
   background-color: white;
@@ -130,7 +136,7 @@ circle.annotation {
   fill: none;
 }
 
-#mySlider {
+#chart1-slider {
   width: 682px;
 }
 
@@ -159,6 +165,5 @@ h3 {
   border-radius: 10px;
   padding: 10px;
   background-color: #f8f9fa;
-  /* font-size: 1rem;
-  line-height: 1.5; */
+  line-height: 1.8rem;
 }

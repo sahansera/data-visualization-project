@@ -3,7 +3,7 @@
 charts.chart3 = function () {
   // set the dimensions and margins of the graph
   var margin = { top: 30, right: 30, bottom: 70, left: 60 },
-    width = 960 - margin.left - margin.right,
+    width = 940 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
   // globals which we need later in other functions

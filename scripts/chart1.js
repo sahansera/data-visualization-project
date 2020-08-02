@@ -27,7 +27,7 @@ charts.chart1 = function () {
 
   // set the dimensions and margins of the graph
   var margin = { top: 10, right: 200, bottom: 30, left: 100 },
-    width = 960 - margin.left - margin.right,
+    width = 940 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
@@ -46,7 +46,7 @@ charts.chart1 = function () {
     drawAnnotation();
 
     // listen to the slider
-    d3.select('#mySlider').on('input', function (d) {
+    d3.select('#chart1-slider').on('input', function (d) {
       selectedValue = this.value;
       updateChart(selectedValue);
     });
@@ -63,14 +63,14 @@ charts.chart1 = function () {
           animationCallback = setInterval(playAnimation, 700);
         }
       });
-  });  
+  });
 
   function playAnimation() {
     var val = parseInt(selectedValue);
     if (val < MAX_YEAR) {
       
       // We haven't reached the end yet, so continue
-      d3.select('#mySlider').property("value", ++val)
+      d3.select('#chart1-slider').property("value", ++val)
       selectedValue = val.toString();
       updateChart(selectedValue);
       isAnimationPlaying = true;
@@ -79,7 +79,7 @@ charts.chart1 = function () {
       
       // We have reached the end so start over
       selectedValue = MIN_YEAR;
-      d3.select('#mySlider').property("value", MIN_YEAR.toString())
+      d3.select('#chart1-slider').property("value", MIN_YEAR.toString())
       updateChart(selectedValue);
       isAnimationPlaying = true;
       d3.select("#chart1-play-btn").text("Pause");
@@ -90,7 +90,15 @@ charts.chart1 = function () {
     }
   }
 
+  function resetSlider() {
+    d3.select("#chart1-slider").property("value", MAX_YEAR.toString());
+    d3.select('#chart1-year-title').text("Monthly Active Users From " + MIN_YEAR + ' to ' + MAX_YEAR);
+  }
+
   function drawChart(data) {
+    // Reset slider
+    resetSlider();
+
     // Reformat the data: we need an array of arrays of {x, y} tuples
     var dataReady = reformatData(allGroups, data);
 
@@ -306,12 +314,9 @@ charts.chart1 = function () {
       // update the lines
       lines
         .data(dataReady)
-        .transition()
-        .duration(200)
         .attr('d', function (d) {
           return line(d.values);
-        })
-        .ease(d3.easeLinear);
+        });
 
       // update the dots
       for (var i = parseInt(sliderValue) + 1; i <= MAX_YEAR; i++) {

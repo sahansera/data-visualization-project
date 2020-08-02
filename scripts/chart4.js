@@ -8,7 +8,7 @@ charts.chart4 = function () {
       bottom: 90,
       left: 50,
     },
-    width = 960 - margin.left - margin.right,
+    width = 940 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
@@ -93,7 +93,9 @@ charts.chart4 = function () {
       .attr('fill', function (d) {
         return color(d.key);
       })
-      .attr("class", function(d){ return "myRect " + d.key })
+      .attr('class', function (d) {
+        return 'myRect ' + d.key;
+      })
       .selectAll('rect')
       // enter a second time = loop subgroup per subgroup to add all rectangles
       .data(function (d) {
@@ -105,16 +107,31 @@ charts.chart4 = function () {
         return x(d.data.Year);
       })
       .attr('y', function (d) {
-        return y(d[1]);
+        return y(0);
       })
       .attr('height', function (d) {
-        return y(d[0]) - y(d[1]);
+        return height - y(0);
       })
       .attr('width', x.bandwidth())
       .attr('stroke', 'grey')
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave);
+
+    // Chart Animation
+    svg
+      .selectAll('rect')
+      .transition()
+      .duration(800)
+      .attr('y', function (d) {
+        return y(d[1]);
+      })
+      .attr('height', function (d) {
+        return y(d[0]) - y(d[1]);
+      })
+      .delay(function (d, i) {
+        return i * 100;
+      });
 
     drawLegend(color);
   }
@@ -171,7 +188,9 @@ charts.chart4 = function () {
       .attr('fill', color)
       .attr('width', 20)
       .attr('height', 20)
-      .attr('class', function (d) { return "legend " + d; })
+      .attr('class', function (d) {
+        return 'legend ' + d;
+      })
       .attr('y', function (d, i) {
         return height + 60;
       })
@@ -180,24 +199,22 @@ charts.chart4 = function () {
         return (i * 120) + (width / 2) - (margin.right + 80);
       })
       .style('cursor', 'pointer')
-      .on("mouseover", function (d) {
+      .on('mouseover', function (d) {
         var subgroupName = d;
-        
-        d3.selectAll(".myRect").style("opacity", 0.2);
-        
-        d3.selectAll(".myRect."+subgroupName)
-          .style("opacity", 1);
 
-        d3.select(".legend."+subgroupName)
-          .style("stroke", "black")
-          .style("stroke-width", "2");
+        d3.selectAll('.myRect').style('opacity', 0.2);
 
+        d3.selectAll('.myRect.' + subgroupName).style('opacity', 1);
+
+        d3.select('.legend.' + subgroupName)
+          .style('stroke', 'black')
+          .style('stroke-width', '2');
       })
       .on('mouseleave', function (d) {
-        d3.selectAll(".myRect").style("opacity", 1);
-        d3.select(".legend."+d)
-          .style("stroke", "none")
-          .style("stroke-width", "0");
+        d3.selectAll('.myRect').style('opacity', 1);
+        d3.select('.legend.' + d)
+          .style('stroke', 'none')
+          .style('stroke-width', '0');
       });
 
     legend

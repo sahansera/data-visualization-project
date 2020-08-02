@@ -36,6 +36,11 @@ function startOver() {
 }
 
 function nextSlide() {
+
+  // Scroll to top during transition
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
   // Hide Prev button if we are on slide 1
   if (slide == 1) {
     d3.select("#prev").style("visibility", "hidden");
