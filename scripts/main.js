@@ -55,13 +55,13 @@ function nextSlide() {
     d3.select("#startover").style("display", "none");
   }
 
-  // Clear all slides except selected one
+  // Clear all slides
   d3.selectAll('section').style('display', 'none');
 
   // Clear all tooltips
   d3.selectAll('.tooltip').style('display', 'none');
 
-  // Clear the SVG
+  // Clear all SVGs
   d3.selectAll('svg').remove();
 
   d3.select('#slide-' + slide).style('display', 'block');

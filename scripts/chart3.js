@@ -126,7 +126,7 @@ charts.chart3 = function () {
           });
 
         d3.select('h3.chart3.title').text(
-          'Social Media Usage of ' + selectedVar + ' in 2019'
+          'Social Media Usage of ' + selectedVar + ' in 2019 (US)'
         );
         showHideAnnotations(selectedVar);
       }
@@ -182,17 +182,9 @@ charts.chart3 = function () {
       .attr('y', 40)
       .attr('class', 'annotation secondary')
       .text('(hover over the bars to explore more info)');
-    // annotation
-    //   .append('line')
-    //   .attr('x1', 410)
-    //   .attr('x2', 800)
-    //   .attr('y1', 20)
-    //   .attr('y2', 40)
-    //   .attr('class', 'annotation chart3 men');
-
     annotation
       .append('line')
-      .attr('x1', 610)
+      .attr('x1', 560)
       .attr('x2', 800)
       .attr('y1', 20)
       .attr('y2', 40)

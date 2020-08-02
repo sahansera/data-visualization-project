@@ -226,7 +226,10 @@ charts.chart2 = function () {
   }
 
   function drawAnnotation() {
+    // Clear previous annotation
     d3.selectAll('.annotation.chart2').remove();
+
+    // Draw the annotation
     var annotation = svg.append('g');
     if (selectedGroup == '18-29') {
       annotation
@@ -262,7 +265,7 @@ charts.chart2 = function () {
         .attr('x', 400)
         .attr('y', 180)
         .attr('class', 'annotation chart2')
-        .text('Older adults have increased in recent years');
+        .text('Older adults have also increased in recent years');
       annotation
         .append('text')
         .attr('x', 420)

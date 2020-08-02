@@ -249,22 +249,9 @@ charts.chart4 = function () {
     annotation
       .append('line')
       .attr('x1', 610)
-      .attr('x2', 800)
+      .attr('x2', 785)
       .attr('y1', 20)
-      .attr('y2', 40)
+      .attr('y2', 60)
       .attr('class', 'annotation');
-    // annotation
-    //   .append('line')
-    //   .attr('x1', 310)
-    //   .attr('x2', 70)
-    //   .attr('y1', 30)
-    //   .attr('y2', 300)
-    //   .attr('class', 'annotation');
-    // annotation
-    //   .append("circle")
-    //   .attr("cx",710)
-    //   .attr("cy",100)
-    //   .attr("r", 50)
-    //   .attr('class', 'annotation')
   }
 };
